@@ -3,8 +3,7 @@ FROM debian:buster
 
 #on met a jour l'index des packages du serveur et on installe nginx
 #https://www.digitalocean.com/community/tutorials/how-to-install-linux-nginx-mysql-php-lemp-stack-on-ubuntu-20-04-fr
-RUN apt update
-RUN apt install nginx -y
+RUN apt update && install nginx -y 
 
 #installer mysql
 RUN apt install mysql-server -y
