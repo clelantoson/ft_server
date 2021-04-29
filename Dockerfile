@@ -17,25 +17,27 @@ RUN apt-get install php-fpm php-mysql -y
 # https://www.gnu.org/software/wget/
 RUN apt-get install wget -y
 
-RUN mkdir /var/www/mon_site && touch /var/www/mon_site/index.php \
-    echo "<?php phpinfo(); ?>" >> /var/www/mon_site/index.php
+RUN mkdir /var/www/mon_site && touch /var/www/mon_site/index.php 
+RUN echo "<?php phpinfo(); ?>" >> /var/www/mon_site/index.php
+COPY ./srcs/index.html /var/www/mon_site/
 
 #je donne acces au user au dossier
-RUN chown -R $USER:$USER /var/www/mon_site
+RUN chown -R www-data /var/www/mon_site 
+RUN chmod 755 var/www/*
 
 COPY ./srcs/nginx.conf /etc/nginx/sites-available/mon_site
 RUN ln -s /etc/nginx/sites-available/mon_site /etc/nginx/sites-enabled/mon_site
 RUN rm /etc/nginx/sites-enabled/default
+
+ENV AUTOINDEX on
 
 #apt-get on peut le considerer comme l'appstore de l'open source
 #wget telecharge un fichier en particulier en utilisant des Internet Protocol (HTTP, FTP)
 #curl c'est comme wget (voir la diff exacte)
 
 #se lance lors du docker run
-#CMD service nginx start && bash
+CMD service nginx start && service php7.3-fpm start && bash
 
 EXPOSE 80 443
 
 #ip 172.17.0.2
-
-
