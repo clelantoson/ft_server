@@ -7,19 +7,21 @@ RUN apt-get update
 # -y = "Yes" automatic
 RUN apt-get install nginx -y 
 
-# installer MYSQL
+# install MYSQL
 RUN apt-get install mariadb-server -y
 
-#installer PHP
+#install PHP
 RUN apt-get install php-fpm php-mysql -y
 
-#installer wget
+#install wget
 # https://www.gnu.org/software/wget/
 RUN apt-get install wget -y
 
-RUN mkdir /var/www/mon_site && touch /var/www/mon_site/index.php 
-RUN echo "<?php phpinfo(); ?>" >> /var/www/mon_site/index.php
+#cree dossier site
+RUN mkdir /var/www/mon_site 
 COPY ./srcs/index.html /var/www/mon_site/
+COPY ./srcs/info.php /var/www/mon_site/
+# RUN echo "<?php phpinfo(); ?>" >> /var/www/mon_site/phpinfo.php
 
 #je donne acces au user au dossier
 RUN chown -R www-data /var/www/mon_site 
