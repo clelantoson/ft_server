@@ -15,6 +15,9 @@ https://www.digitalocean.com/community/tutorials/how-to-install-linux-nginx-mysq
 docker run -it -p 80:80 mica
 first 80 means is local port, second 80 means container port
 
-
 Tuto pour creer une db avec php
 https://www.digitalocean.com/community/tutorials/how-to-install-linux-nginx-mariadb-php-lemp-stack-on-debian-10#step-2-%E2%80%94-installing-mariadb
+
+Install phpmyadmin
+https://www.digitalocean.com/community/tutorials/how-to-install-phpmyadmin-from-source-debian-10
+https://www.itzgeek.com/how-tos/linux/debian/how-to-install-phpmyadmin-with-nginx-on-debian-10.html

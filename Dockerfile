@@ -10,28 +10,43 @@ RUN apt-get install nginx -y
 # install MYSQL
 RUN apt-get install mariadb-server -y
 
-#install PHP
-RUN apt-get install php-fpm php-mysql -y
+#install PHP #from phpmbstring etc is for myadmin
+RUN apt-get install php-fpm php-mysql php-mbstring php-zip php-gd php-json php-xml -y
 
-#install wget
-# https://www.gnu.org/software/wget/
+#install WGET # https://www.gnu.org/software/wget/
 RUN apt-get install wget -y
 
 #cree dossier site
 RUN mkdir /var/www/mon_site
-COPY ./srcs/index.html /var/www/mon_site/
-COPY ./srcs/info.php /var/www/mon_site/
+COPY ./srcs/index.html /var/www/mon_site
+COPY ./srcs/info.php /var/www/mon_site
 # COPY ./srcs/todolist.php /var/www/mon_site/
 # RUN echo "<?php phpinfo(); ?>" >> /var/www/mon_site/phpinfo.php
 
 #je donne acces au user au dossier
 # www-data is the owner of the web server process, that is nginx, user = www-data
-RUN chown -R www-data /var/www/mon_site
-RUN chmod 755 var/www/*
+RUN chown -R www-data:www-data /var/www/*
+RUN chmod -R 755 /var/www/*
 
 COPY ./srcs/nginx.conf /etc/nginx/sites-available/mon_site
 RUN ln -s /etc/nginx/sites-available/mon_site /etc/nginx/sites-enabled/mon_site
 RUN rm /etc/nginx/sites-enabled/default
+
+#install phpmyadmin https://docs.phpmyadmin.net/en/latest/setup.html#quick-install
+# WORKDIR /var/www/html/phpmyadmin
+# RUN wget https://files.phpmyadmin.net/phpMyAdmin/5.1.0/phpMyAdmin-5.1.0-english.tar.gz && \
+# 	tar -xzvf phpMyAdmin-5.1.0-english.tar.gz
+# COPY ./srcs/config.inc.php /var/www/mon_site
+
+RUN mkdir /var/www/mon_site/phpmyadmin
+RUN wget https://files.phpmyadmin.net/phpMyAdmin/5.1.0/phpMyAdmin-5.1.0-english.tar.gz
+RUN tar -xzvf phpMyAdmin-5.1.0-english.tar.gz --strip-components 1 -C /var/www/mon_site/phpmyadmin && \
+	rm -rf phpMyAdmin-5.1.0-english.tar.gz \
+COPY ./srcs/config.inc.php /var/www/mon_site/phpmyadmin/config.inc.php
+
+#install WORDPRESS
+# RUN wget https://wordpress.org/latest.tar.gz && \
+# 	tar -xzvf latest.tar.gz && \
 
 ENV AUTOINDEX on
 
