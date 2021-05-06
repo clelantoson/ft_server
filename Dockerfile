@@ -55,10 +55,11 @@ ENV AUTOINDEX on
 #curl c'est comme wget (voir la diff exacte)
 
 #se lance lors du docker run
-CMD service nginx start && service php7.3-fpm start && service mysql start && bash
+# CMD service mysql start
 
 COPY srcs/start.sh ./
-EXPOSE 80 443
-CMD bash /start.sh && bash
 
+CMD bash /start.sh & bash
+
+EXPOSE 80 443
 #ip 172.17.0.2
