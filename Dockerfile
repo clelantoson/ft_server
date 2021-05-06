@@ -42,11 +42,17 @@ RUN rm -rf /var/www/mon_site/phpmyadmin/config.sample.inc.php
 COPY ./srcs/config.inc.php /var/www/mon_site/phpmyadmin/config.inc.php
 
 #install WORDPRESS
-RUN mkdir /var/www/mon_site/wordpress
-RUN wget https://wordpress.org/latest.tar.gz && \
-	tar -xzvf latest.tar.gz --strip-components 1 -C /var/www/mon_site/wordpress && \
-	rm -rf phpMyAdmin-5.1.0-english.tar.gz \
-COPY srcs/wp-config.php /var/www/mon_site/wordpress
+# WORKDIR /var/www/mon_site
+# RUN wget https://wordpress.org/latest.tar.gz
+# RUN	tar -xzvf latest.tar.gz --strip-components 1 -C /var/www/mon_site
+# RUN	rm -rf latest.tar.gz
+# COPY ./srcs/wp-config.php /var/www/mon_site/wordpress
+
+# WORKDIR /var/www/mon_site/wordpress
+# RUN wget -c https://wordpress.org/latest.tar.gz
+#     tar -xzvf latest.tar.gz && \
+#     rm -rf latest.tar.gz
+# COPY ./srcs/wp-config.php /var/www/mon_site/wordpress
 
 ENV AUTOINDEX on
 
@@ -54,12 +60,10 @@ ENV AUTOINDEX on
 #wget telecharge un fichier en particulier en utilisant des Internet Protocol (HTTP, FTP)
 #curl c'est comme wget (voir la diff exacte)
 
-#se lance lors du docker run
-# CMD service mysql start
-
 COPY srcs/start.sh ./
+COPY srcs/wp-config.php ./
 
-CMD bash /start.sh & bash
+CMD bash /start.sh
 
 EXPOSE 80 443
 #ip 172.17.0.2
