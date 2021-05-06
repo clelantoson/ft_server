@@ -4,6 +4,7 @@ FROM debian:buster
 #on met a jour l'index des packages du serveur et on installe nginx
 #https://www.digitalocean.com/community/tutorials/how-to-install-linux-nginx-mysql-php-lemp-stack-on-ubuntu-20-04-fr
 RUN apt-get update
+RUN apt-get upgrade -y
 # -y = "Yes" automatic
 RUN apt-get install nginx -y
 
@@ -32,21 +33,20 @@ COPY ./srcs/nginx.conf /etc/nginx/sites-available/mon_site
 RUN ln -s /etc/nginx/sites-available/mon_site /etc/nginx/sites-enabled/mon_site
 RUN rm /etc/nginx/sites-enabled/default
 
-#install phpmyadmin https://docs.phpmyadmin.net/en/latest/setup.html#quick-install
-# WORKDIR /var/www/html/phpmyadmin
-# RUN wget https://files.phpmyadmin.net/phpMyAdmin/5.1.0/phpMyAdmin-5.1.0-english.tar.gz && \
-# 	tar -xzvf phpMyAdmin-5.1.0-english.tar.gz
-# COPY ./srcs/config.inc.php /var/www/mon_site
-
+# install phpmyadmin
 RUN mkdir /var/www/mon_site/phpmyadmin
 RUN wget https://files.phpmyadmin.net/phpMyAdmin/5.1.0/phpMyAdmin-5.1.0-english.tar.gz
-RUN tar -xzvf phpMyAdmin-5.1.0-english.tar.gz --strip-components 1 -C /var/www/mon_site/phpmyadmin && \
-	rm -rf phpMyAdmin-5.1.0-english.tar.gz \
+RUN tar -xvf phpMyAdmin-5.1.0-english.tar.gz --strip-components 1 -C /var/www/mon_site/phpmyadmin
+RUN rm -rf phpMyAdmin-5.1.0-english.tar.gz
+RUN rm -rf /var/www/mon_site/phpmyadmin/config.sample.inc.php
 COPY ./srcs/config.inc.php /var/www/mon_site/phpmyadmin/config.inc.php
 
 #install WORDPRESS
-# RUN wget https://wordpress.org/latest.tar.gz && \
-# 	tar -xzvf latest.tar.gz && \
+RUN mkdir /var/www/mon_site/wordpress
+RUN wget https://wordpress.org/latest.tar.gz && \
+	tar -xzvf latest.tar.gz --strip-components 1 -C /var/www/mon_site/wordpress && \
+	rm -rf phpMyAdmin-5.1.0-english.tar.gz \
+COPY srcs/wp-config.php /var/www/mon_site/wordpress
 
 ENV AUTOINDEX on
 
@@ -57,6 +57,8 @@ ENV AUTOINDEX on
 #se lance lors du docker run
 CMD service nginx start && service php7.3-fpm start && service mysql start && bash
 
+COPY srcs/start.sh ./
 EXPOSE 80 443
+CMD bash /start.sh && bash
 
 #ip 172.17.0.2

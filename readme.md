@@ -21,3 +21,7 @@ https://www.digitalocean.com/community/tutorials/how-to-install-linux-nginx-mari
 Install phpmyadmin
 https://www.digitalocean.com/community/tutorials/how-to-install-phpmyadmin-from-source-debian-10
 https://www.itzgeek.com/how-tos/linux/debian/how-to-install-phpmyadmin-with-nginx-on-debian-10.html
+
+
+Install WP
+https://www.digitalocean.com/community/tutorials/how-to-install-wordpress-with-lemp-nginx-mariadb-and-php-on-debian-10
