@@ -1,12 +1,16 @@
-#on definit l'image qu'on va utiliser comme base
+#we take the image we define as a base of our project
 FROM debian:buster
 
-#on met a jour l'index des packages du serveur et on installe nginx
+#we update and upgrade index of packages of the server
 #https://www.digitalocean.com/community/tutorials/how-to-install-linux-nginx-mysql-php-lemp-stack-on-ubuntu-20-04-fr
 RUN apt-get update
 RUN apt-get upgrade -y
-# -y = "Yes" automatic
 RUN apt-get install nginx -y
+
+# install SSL https://linuxize.com/post/creating-a-self-signed-ssl-certificate/
+RUN mkdir etc/nginx/ssl
+RUN	apt-get install openssl
+RUN openssl req -newkey rsa:4096 -x509 -sha256 -days 3650 -nodes -out etc/nginx/ssl/mon_site.crt -keyout etc/nginx/ssl/mon_site.key -subj "/C=FR/ST=Paris/L=Paris/O=42 /OU=cle-lan/CN=mon_site"
 
 # install MYSQL
 RUN apt-get install mariadb-server -y
@@ -17,14 +21,15 @@ RUN apt-get install php-fpm php-mysql php-mbstring php-zip php-gd php-json php-x
 #install WGET # https://www.gnu.org/software/wget/
 RUN apt-get install wget -y
 
-#cree dossier site
+#create file folder for my website
 RUN mkdir /var/www/mon_site
 COPY ./srcs/index.html /var/www/mon_site
-COPY ./srcs/info.php /var/www/mon_site
+# COPY ./srcs/info.php /var/www/mon_site
+
 # COPY ./srcs/todolist.php /var/www/mon_site/
 # RUN echo "<?php phpinfo(); ?>" >> /var/www/mon_site/phpinfo.php
 
-#je donne acces au user au dossier
+#ji give acces at the user to the folder
 # www-data is the owner of the web server process, that is nginx, user = www-data
 RUN chown -R www-data:www-data /var/www/*
 RUN chmod -R 755 /var/www/*
@@ -41,19 +46,6 @@ RUN rm -rf phpMyAdmin-5.1.0-english.tar.gz
 RUN rm -rf /var/www/mon_site/phpmyadmin/config.sample.inc.php
 COPY ./srcs/config.inc.php /var/www/mon_site/phpmyadmin/config.inc.php
 
-#install WORDPRESS
-# WORKDIR /var/www/mon_site
-# RUN wget https://wordpress.org/latest.tar.gz
-# RUN	tar -xzvf latest.tar.gz --strip-components 1 -C /var/www/mon_site
-# RUN	rm -rf latest.tar.gz
-# COPY ./srcs/wp-config.php /var/www/mon_site/wordpress
-
-# WORKDIR /var/www/mon_site/wordpress
-# RUN wget -c https://wordpress.org/latest.tar.gz
-#     tar -xzvf latest.tar.gz && \
-#     rm -rf latest.tar.gz
-# COPY ./srcs/wp-config.php /var/www/mon_site/wordpress
-
 ENV AUTOINDEX on
 
 #apt-get on peut le considerer comme l'appstore de l'open source
@@ -62,8 +54,11 @@ ENV AUTOINDEX on
 
 COPY srcs/start.sh ./
 COPY srcs/wp-config.php ./
+COPY srcs/autoindex_on.sh ./
+COPY srcs/autoindex_off.sh ./
 
 CMD bash /start.sh
 
 EXPOSE 80 443
-#ip 172.17.0.2
+# find my ip do: ip addr show eth0 | grep inet | awk '{ print $2; }' | sed 's/\/.*$//'
+
