@@ -23,16 +23,19 @@ RUN apt-get install wget -y
 
 #create file folder for my website
 RUN mkdir /var/www/mon_site
-COPY ./srcs/index.html /var/www/mon_site
-# COPY ./srcs/info.php /var/www/mon_site
 
+#to comment if we want to see a difference when autoindex is switched off
+COPY ./srcs/index.html /var/www/mon_site
+
+# TEST PHP
+# COPY ./srcs/info.php /var/www/mon_site
 # COPY ./srcs/todolist.php /var/www/mon_site/
 # RUN echo "<?php phpinfo(); ?>" >> /var/www/mon_site/phpinfo.php
 
-#ji give acces at the user to the folder
+#give acces at the user to the folder
 # www-data is the owner of the web server process, that is nginx, user = www-data
 RUN chown -R www-data:www-data /var/www/*
-RUN chmod -R 755 /var/www/*
+RUN chmod -R 777 /var/www/*
 
 COPY ./srcs/nginx.conf /etc/nginx/sites-available/mon_site
 RUN ln -s /etc/nginx/sites-available/mon_site /etc/nginx/sites-enabled/mon_site
@@ -46,19 +49,22 @@ RUN rm -rf phpMyAdmin-5.1.0-english.tar.gz
 RUN rm -rf /var/www/mon_site/phpmyadmin/config.sample.inc.php
 COPY ./srcs/config.inc.php /var/www/mon_site/phpmyadmin/config.inc.php
 
-ENV AUTOINDEX on
+RUN chmod -R 755 /var/www/*
 
-#apt-get on peut le considerer comme l'appstore de l'open source
-#wget telecharge un fichier en particulier en utilisant des Internet Protocol (HTTP, FTP)
-#curl c'est comme wget (voir la diff exacte)
+ENV AUTOINDEX on
 
 COPY srcs/start.sh ./
 COPY srcs/wp-config.php ./
 COPY srcs/autoindex_on.sh ./
 COPY srcs/autoindex_off.sh ./
+COPY srcs/changeautoindex.sh ./
 
 CMD bash /start.sh
 
 EXPOSE 80 443
+
 # find my ip do: ip addr show eth0 | grep inet | awk '{ print $2; }' | sed 's/\/.*$//'
 
+#apt-get on peut le considerer comme l'appstore de l'open source
+#wget telecharge un fichier en particulier en utilisant des Internet Protocol (HTTP, FTP)
+#curl c'est comme wget (voir la diff exacte)

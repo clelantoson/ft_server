@@ -12,6 +12,7 @@ mv wordpress /var/www/mon_site
 mv ./wp-config.php /var/www/mon_site/wordpress/.
 rm /var/www/mon_site/wordpress/wp-config-sample.php
 
+chmod -R 755 /var/www/*
 
 service mysql start
 echo "CREATE DATABASE IF NOT EXISTS wordpress;" | mysql -u root --skip-password

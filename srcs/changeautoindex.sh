@@ -1,21 +1,29 @@
+#!/bin/bash
+
 # setup server config
-# if [ "$autoindex" = "on" ]
+# if [ $AUTOINDEX = "on" ]
 # then
-# 	export autoindex=off
+# 	export AUTOINDEX=off
 # 	sed -i 's/autoindex on/autoindex off/g' /etc/nginx/sites-available/mon_site
-# else
-# 	export autoindex=on
+# elif [ $AUTOINDEX = "off" ]
+# then
+# 	export AUTOINDEX=on
 # 	sed -i 's/autoindex off/autoindex on/g' /etc/nginx/sites-available/mon_site
 # fi
 # service nginx reload
-# echo "Autoindex is $autoindex"
+# echo "Autoindex is $AUTOINDEX "
 
-# setup server config
 if [ $AUTOINDEX = "on" ]
 then
-    cp /tmp/nginx_config_on /etc/nginx/sites-available/mon_site ;
-elif [ $AUTOINDEX = "off" ]
-then
-    cp /tmp/nginx_config_off /etc/nginx/sites-available/mon_site ;
-    cp /var/www/html/index.nginx-debian.html /var/www/mon_site/index.html
+    sed -i 's/autoindex on;/autoindex off;/g' /etc/nginx/sites-available/mon_site
+    export AUTOINDEX=off
+    echo "Autoindex is $AUTOINDEX"
+    service nginx reload
+else
+    sed -i 's/autoindex off;/autoindex on;/g' /etc/nginx/sites-available/mon_site
+    export AUTOINDEX=on
+    echo "Autoindex is $AUTOINDEX"
+    service nginx reload
 fi
+# service nginx reload
+# echo "Autoindex is $AUTOINDEX "
