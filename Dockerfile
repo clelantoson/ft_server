@@ -2,12 +2,11 @@
 FROM debian:buster
 
 #we update and upgrade index of packages of the server
-#https://www.digitalocean.com/community/tutorials/how-to-install-linux-nginx-mysql-php-lemp-stack-on-ubuntu-20-04-fr
 RUN apt-get update
 RUN apt-get upgrade -y
 RUN apt-get install nginx -y
 
-# install SSL https://linuxize.com/post/creating-a-self-signed-ssl-certificate/
+# install SSL
 RUN mkdir etc/nginx/ssl
 RUN	apt-get install openssl
 RUN openssl req -newkey rsa:4096 -x509 -sha256 -days 3650 -nodes -out etc/nginx/ssl/mon_site.crt -keyout etc/nginx/ssl/mon_site.key -subj "/C=FR/ST=Paris/L=Paris/O=42 /OU=cle-lan/CN=mon_site"
@@ -18,7 +17,7 @@ RUN apt-get install mariadb-server -y
 #install PHP #from phpmbstring etc is for myadmin
 RUN apt-get install php-fpm php-mysql php-mbstring php-zip php-gd php-json php-xml -y
 
-#install WGET # https://www.gnu.org/software/wget/
+#install WGET
 RUN apt-get install wget -y
 
 #create file folder for my website
@@ -35,7 +34,7 @@ COPY ./srcs/index.html /var/www/mon_site
 #give acces at the user to the folder
 # www-data is the owner of the web server process, that is nginx, user = www-data
 RUN chown -R www-data:www-data /var/www/*
-RUN chmod -R 777 /var/www/*
+RUN chmod -R 755 /var/www/*
 
 COPY ./srcs/nginx.conf /etc/nginx/sites-available/mon_site
 RUN ln -s /etc/nginx/sites-available/mon_site /etc/nginx/sites-enabled/mon_site

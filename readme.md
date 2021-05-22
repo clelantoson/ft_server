@@ -22,11 +22,17 @@ https://www.digitalocean.com/community/tutorials/how-to-install-phpmyadmin-from-
 https://www.itzgeek.com/how-tos/linux/debian/how-to-install-phpmyadmin-with-nginx-on-debian-10.html
 https://devanswers.co/phpmyadmin-access-denied-for-user-root-localhost/
 
+Install LEMP 
+#https://www.digitalocean.com/community/tutorials/how-to-install-linux-nginx-mysql-php-lemp-stack-on-ubuntu-20-04-fr
 
 Install WP
 https://www.digitalocean.com/community/tutorials/how-to-install-wordpress-with-lemp-nginx-mariadb-and-php-on-debian-10
 
+Install SSL
 https://linuxize.com/post/creating-a-self-signed-ssl-certificate/
+
+INstall wget 
+https://www.gnu.org/software/wget/
 
 
 sed script autoindex
