@@ -2,23 +2,26 @@
 FROM debian:buster
 
 #we update and upgrade index of packages of the server
-RUN apt-get update
-RUN apt-get upgrade -y
-RUN apt-get install nginx -y
+RUN apt-get update && apt-get install nginx -y
+# RUN apt-get upgrade
 
 # install SSL
 RUN mkdir etc/nginx/ssl
 RUN	apt-get install openssl
 RUN openssl req -newkey rsa:4096 -x509 -sha256 -days 3650 -nodes -out etc/nginx/ssl/mon_site.crt -keyout etc/nginx/ssl/mon_site.key -subj "/C=FR/ST=Paris/L=Paris/O=42 /OU=cle-lan/CN=mon_site"
 
-# install MYSQL
-RUN apt-get install mariadb-server -y
-
+#install MYSQL
 #install PHP #from phpmbstring etc is for myadmin
-RUN apt-get install php-fpm php-mysql php-mbstring php-zip php-gd php-json php-xml -y
-
 #install WGET
-RUN apt-get install wget -y
+RUN apt-get install mariadb-server -y \
+	php-fpm \
+	php-mysql \
+	php-mbstring \
+	php-zip \
+	php-gd \
+	php-json \
+	php-xml \
+	wget
 
 #create file folder for my website
 RUN mkdir /var/www/mon_site
@@ -56,7 +59,7 @@ COPY srcs/start.sh ./
 COPY srcs/wp-config.php ./
 COPY srcs/autoindex_on.sh ./
 COPY srcs/autoindex_off.sh ./
-COPY srcs/changeautoindex.sh ./
+# COPY srcs/changeautoindex.sh ./
 
 CMD bash /start.sh
 
@@ -64,6 +67,6 @@ EXPOSE 80 443
 
 # find my ip do: ip addr show eth0 | grep inet | awk '{ print $2; }' | sed 's/\/.*$//'
 
-#apt-get on peut le considerer comme l'appstore de l'open source
-#wget telecharge un fichier en particulier en utilisant des Internet Protocol (HTTP, FTP)
-#curl c'est comme wget (voir la diff exacte)
+#apt-get can be considered as the appstore of open source
+#wget downkoads a particular file using Internet Protocol (HTTP, FTP)
+#curl is a wget like
